@@ -11,34 +11,22 @@
 105
 10296
 */
+/*改用a*b=lcm*gcd的正确算法*/
 #include<stdio.h>
 #include<string.h>
+long long gcd(long long a, long long b) { return b ? gcd(b, a % b) : a; }
 int main()
 {
-    int n, t, num, ans = 1,count, tong[100000] = {0};
-    scanf("%d", &n);
+    long long n, t, num, ans;
+    scanf("%lld", &n);
     for (int i = 0; i < n;i++){
         ans = 1;
-        memset(tong, 0,sizeof(tong));
-        scanf("%d", &num);
+        scanf("%lld", &num);
         for (int j = 0; j < num;j++){
-            scanf("%d", &t);
-            for (int k = 2; k <= t;k++){
-                count = 0;
-                while(t%k==0){
-                    t = t / k;
-                    count++;
-                }
-                if(tong[k]<count)
-                    tong[k] = count;
-            }
+            scanf("%lld", &t);
+            ans = ans / gcd(ans, t) * t;
         }
-        for (int j = 2; j < 100000;j++){
-            for (int k = 0; k < tong[j];k++){
-                ans = ans * j;
-            }
-        }
-        printf("%d\n", ans);
+        printf("%lld\n", ans);
     }
         return 0;
 }

@@ -1,0 +1,30 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceRoot}",
+                "C:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/include/c++",
+                "C:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/include/c++/x86_64-w64-mingw32",
+                "C:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/include/c++/backward",
+                "C:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/include",
+                "C:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/../../../../include",
+                "C:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/include-fixed",
+                "C:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/../../../../x86_64-w64-mingw32/include"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "__GNUC__=6",
+                "__cdecl=__attribute__((__cdecl__))"
+            ],
+            "intelliSenseMode": "msvc-x64",
+            "browse": {
+                "path": [
+                    "${workspaceRoot}",
+                ]
+            },
+            "compilerPath": "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/bin/cl.exe",
+        }
+    ],
+}

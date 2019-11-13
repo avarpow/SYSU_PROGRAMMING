@@ -1,6 +1,16 @@
 {
     "files.associations": {
         "stdio.h": "c",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "exception": "cpp",
+        "ios": "cpp",
+        "istream": "cpp",
+        "memory": "cpp",
+        "ostream": "cpp",
+        "streambuf": "cpp",
+        "tuple": "cpp",
+        "utility": "cpp",
+        "xiosbase": "cpp",
+        "xstring": "cpp"
     }
 }

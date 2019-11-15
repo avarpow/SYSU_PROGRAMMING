@@ -12,6 +12,7 @@
         "utility": "cpp",
         "xiosbase": "cpp",
         "xstring": "cpp",
-        "xstddef": "cpp"
+        "xstddef": "cpp",
+        "iostream": "cpp"
     }
 }

@@ -36,11 +36,11 @@ int wadd(char *nong,char *s){
 void dfs(int step){
     if(step==2*n)
         return;
-    for (int i = 0; i < 2*n;i++){
-        if(vis[i]==0){
+    for (int i = 0; i < n;i++){
+        if(vis[i]<2){
             int t = tu[ans_t.top()][i];
             if(t>0){
-                vis[i] = 1;
+                vis[i] ++;
                 ans_t.push(i);
                 now_len += (slen[i] - t);
                 if(now_len>ans){
@@ -50,7 +50,7 @@ void dfs(int step){
                 dfs(step + 1);
                 now_len -= (slen[i] - t);
                 ans_t.pop();
-                vis[i] = 0;
+                vis[i] --;
             }
         }
     }
@@ -59,23 +59,22 @@ int main(){
     scanf("%d", &n);
     for (int i = 0; i < n;i++){
         scanf("%s", s[i]);
-        strcpy(s[i+n], s[i]);
     }
     char a[20];
     scanf("%s", a);
-    for (int i = 0; i < 2*n;i++){
-        for (int j = 0; j < 2*n;j++){
+    for (int i = 0; i < n;i++){
+        for (int j = 0; j < n;j++){
             tu[i][j] = wadd(s[i], s[j]);
         }
     }
-    for (int i = 0; i < 2*n;i++){
+    for (int i = 0; i < n;i++){
         slen[i] = strlen(s[i]);
     }
-    for (int i = 0; i < 2 * n; i++)
+    for (int i = 0; i < n; i++)
     {
-        if (s[i][0] == a[0] && vis[i]==0)
+        if (s[i][0] == a[0] && vis[i]<2)
         {
-            vis[i] = 1;
+            vis[i] ++;
             ans_t.push(i);
             now_len += slen[i];
             if(now_len>ans){
@@ -85,7 +84,7 @@ int main(){
             dfs(1);
             now_len -= slen[i];
             ans_t.pop();
-            vis[i] = 0;
+            vis[i] --;
         }
     }
     printf("%d\n", ans);

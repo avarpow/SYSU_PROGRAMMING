@@ -6,7 +6,7 @@
         {
             "type": "shell",
             "label": "g++",
-            "command": "C:/TDM-GCC-64/bin/g++.exe",
+            "command": "C:/mingw64/bin/g++.exe",
             "args": [
                 "-g",
                 "${file}",
@@ -14,7 +14,7 @@
                 "${fileDirname}\\${fileBasenameNoExtension}.exe"
             ],
             "options": {
-                //"cwd": "C:\\TDM-GCC-64\\bin"
+                //"cwd": "C:\\mingw64\\bin"
             },
             "problemMatcher": [
                 "$gcc"

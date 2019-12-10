@@ -4,13 +4,13 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceRoot}",
-                "C:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/include/c++",
-                "C:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/include/c++/x86_64-w64-mingw32",
-                "C:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/include/c++/backward",
-                "C:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/include",
-                "C:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/../../../../include",
-                "C:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/include-fixed",
-                "C:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/../../../../x86_64-w64-mingw32/include"
+                "C:/mingw64/include/**",
+                "C:/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++",
+                "C:/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/x86_64-w64-mingw32",
+                "C:/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/backward",
+                "C:/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include",
+                "C:/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include-fixed",
+                "C:/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/../../../../x86_64-w64-mingw32/include"
             ],
             "defines": [
                 "_DEBUG",
@@ -20,11 +20,20 @@
             ],
             "intelliSenseMode": "msvc-x64",
             "browse": {
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": "",
                 "path": [
                     "${workspaceRoot}",
+                    "C:/mingw64/include/**",
+                    "C:/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++",
+                    "C:/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/x86_64-w64-mingw32",
+                    "C:/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/backward",
+                    "C:/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include",
+                    "C:/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include-fixed",
+                    "C:/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/../../../../x86_64-w64-mingw32/include"
                 ]
-            },
-            "compilerPath": "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/bin/cl.exe",
+            }
         }
     ],
+    "version": 4
 }

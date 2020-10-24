@@ -183,7 +183,7 @@ void order::showStastics(){
     }
     cout<<"total served consumer "<<servered_count<<" "
     <<"avarge waitting time "<<setprecision(6)<<(double)total_waiting_time/servered_count
-    <<" ";
+    <<" s";
 }
 //consumerGeneraterlog
 void order::log(WAITING_COMSUMER w_con,WAITTING_LIST& waitting_list){

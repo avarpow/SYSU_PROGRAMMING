@@ -21,42 +21,44 @@ struct zip_huffman_node
 class zip_huffman
 {
 public:
-    void setinputfile_name(string);
-    void setoutputfile_name(string);
-    void run();
+    void setinputfile_name(string);//设置输入文件的文件名
+    void setoutputfile_name(string);//设置输出生成的压缩文件的文件名
+    void run();//执行压缩过程
 
 private:
     string str_input; //储存整个文件的字符串
-    string str_zip;
-    string huffman_map[256];
-    string inputfile_name;
-    string outputfile_name;
-    string keyfile_name;
-    vector<int> huffman_count;
-    priority_queue<zip_huffman_node> heap_huffman;
-    zip_huffman_node *root;
-    void openfile(string inputfile_name, string &str_input);
-    void count_huffman_node(vector<int> &huffman_count, const string &str_input);
-    void createheap(const vector<int> &huffman_count, priority_queue<zip_huffman_node> &heap_huffman);
-    zip_huffman_node *createtree(priority_queue<zip_huffman_node> &heap_huffman);
-    void printtree(zip_huffman_node *root);
-    void travel(zip_huffman_node *root, string &st);
-    void trans2code(zip_huffman_node *root);
-    void genzipstr(string huffman_map[], string &str_input, string &str_zip);
-    void writezipfile(string &str_zip, string inputfile_name);
-    void writekeyfile(string huffman_map[], int chunk, string inputfile_name);
-    void writefile(string huffman_map[], string &str_zip, string inputfile_name);
-    void release_huffman_tree(zip_huffman_node *root);
+    string str_zip;//储存压缩之后的字符串
+    string huffman_map[256];//储存每个字节对应的前缀码
+    string inputfile_name;//储存输入文件的名
+    string outputfile_name;//储存输出文件名
+    string keyfile_name;//储存解压信息的文件名，为输出文件名+".key"
+    vector<int> huffman_count;//统计每个字节的频次
+    priority_queue<zip_huffman_node> heap_huffman;//暂时储存huffman节点的最小堆
+    zip_huffman_node *root;//储存huffman树的根节点
+    void openfile(string inputfile_name, string &str_input);//读取文件储存到字符串中
+    void count_huffman_node(vector<int> &huffman_count, const string &str_input);//统计字节出现的频数
+    void createheap(const vector<int> &huffman_count, priority_queue<zip_huffman_node> &heap_huffman);//建立huffman节点临时堆
+    zip_huffman_node *createtree(priority_queue<zip_huffman_node> &heap_huffman);//建立huffman树
+    void printtree(zip_huffman_node *root);//打印huffman树,debug用
+    void travel(zip_huffman_node *root, string &st);//打印huffman节点的临时函数
+    void trans2code(zip_huffman_node *root);//打印huffman节点的临时函数
+    void genzipstr(string huffman_map[], string &str_input, string &str_zip);//生成压缩后的字符串
+    void writezipfile(string &str_zip, string inputfile_name);//写入压缩后的文件
+    void writekeyfile(string huffman_map[], int chunk, string inputfile_name);//写入压缩信息的文件
+    void writefile(string huffman_map[], string &str_zip, string inputfile_name);//写入文件，调用前两个函数
+    void release_huffman_tree(zip_huffman_node *root);//删除huffman树，防止内存泄漏
 };
+//设置输入文件的文件名
 void zip_huffman::setinputfile_name(string _inputfile_name)
 {
     inputfile_name = _inputfile_name;
 }
+//设置输出生成的压缩文件的文件名
 void zip_huffman::setoutputfile_name(string _outputfile_name)
 {
     outputfile_name = _outputfile_name;
 }
-
+//执行压缩过程
 void zip_huffman::openfile(string inputfile_name, string &str_input)
 {
     ifstream s_inputfile;
@@ -74,6 +76,7 @@ void zip_huffman::openfile(string inputfile_name, string &str_input)
     //cout<<str_input;
     //10.21 19:53 str无错误
 }
+//统计字节出现的频数
 void zip_huffman::count_huffman_node(vector<int> &huffman_count, const string &str_input)
 {
     huffman_count.resize(256);
@@ -84,9 +87,10 @@ void zip_huffman::count_huffman_node(vector<int> &huffman_count, const string &s
     }
     for (int i = 0; i < 256; i++)
     {
-        cout << i << " : " << huffman_count[i] << endl;
+        //cout << i << " : " << huffman_count[i] << endl;
     }
 }
+//建立huffman节点临时堆
 void zip_huffman::createheap(const vector<int> &huffman_count, priority_queue<zip_huffman_node> &heap_huffman)
 {
     for (int i = 0; i < 256; i++)
@@ -101,6 +105,7 @@ void zip_huffman::createheap(const vector<int> &huffman_count, priority_queue<zi
         }
     }
 }
+//建立huffman树
 zip_huffman_node *zip_huffman::createtree(priority_queue<zip_huffman_node> &heap_huffman)
 {
     while (heap_huffman.size() > 1)
@@ -123,6 +128,7 @@ zip_huffman_node *zip_huffman::createtree(priority_queue<zip_huffman_node> &heap
     *ret = heap_huffman.top();
     return ret;
 }
+//打印huffman树,debug用
 void zip_huffman::printtree(zip_huffman_node *root)
 {
     queue<zip_huffman_node *> te;
@@ -137,12 +143,12 @@ void zip_huffman::printtree(zip_huffman_node *root)
         {
             all_count++;
             zip_huffman_node *temp = te.front();
-            cout << now_layel << " : " << temp->count;
+            //cout << now_layel << " : " << temp->count;
             if (temp->left_child == nullptr && temp->right_child == nullptr)
             {
-                cout << " " << (int)temp->c << "  leave node  ";
+                //cout << " " << (int)temp->c << "  leave node  ";
             }
-            cout << endl;
+            //cout << endl;
             if (temp->left_child != nullptr)
             {
                 te.push(temp->left_child);
@@ -156,6 +162,7 @@ void zip_huffman::printtree(zip_huffman_node *root)
     }
     //printtree ok 2020.10.22
 }
+//根据huffman树，构建各个字符的前缀码
 void zip_huffman::travel(zip_huffman_node *root, string &st)
 {
     if (root == nullptr)
@@ -164,7 +171,7 @@ void zip_huffman::travel(zip_huffman_node *root, string &st)
     }
     if (root->left_child == nullptr && root->right_child == nullptr)
     {
-        cout << (int)root->c << " " << (int)root->c << " " << st << endl;
+        //cout << (int)root->c << " " << (int)root->c << " " << st << endl;
         huffman_map[root->c] = st;
 
         return;
@@ -182,25 +189,26 @@ void zip_huffman::travel(zip_huffman_node *root, string &st)
         st.erase(st.end() - 1);
     }
 }
-
+//打印huffman节点的临时函数
 void zip_huffman::trans2code(zip_huffman_node *root)
 {
     //中序遍历，用栈
     string st;
     travel(root, st);
 }
+//生成压缩后的字符串
 void zip_huffman::genzipstr(string huffman_map[], string &str_input, string &str_zip)
 {
-    cout<<"input str size"<<str_input.size()<<endl;
+    //cout<<"input str size"<<str_input.size()<<endl;
     for (auto i : str_input)
     {
         unsigned char t=i;
         str_zip += huffman_map[t];
     }
-    cout << str_zip;
+    //cout << str_zip;
 
 }
-
+//写入压缩后的文件
 void zip_huffman::writezipfile(string &str_zip, string inputfile_name)
 {
     string zipfile_name = outputfile_name;
@@ -210,28 +218,28 @@ void zip_huffman::writezipfile(string &str_zip, string inputfile_name)
         return;
     int count = 0;
     char temp = 0;
-    cout << endl;
+    //cout << endl;
     for (auto &i : str_zip)
     {
         temp *= 2;
         temp += (i - '0');
         count++;
-        cout << i;
+        //cout << i;
         if (count == 8)
         {
-            cout << " " << hex << (short)temp;
-            cout << endl;
+            //cout << " " << hex << (short)temp;
+            //cout << endl;
             s_zipfile << temp;
             temp = 0;
             count = 0;
         }
     }
 }
-
+//写入压缩信息的文件
 void zip_huffman::writekeyfile(string huffman_map[], int chunk, string inputfile_name)
 {
     string keyfile_name = outputfile_name + ".key";
-    cout << keyfile_name << endl;
+    //cout << keyfile_name << endl;
     ofstream s_keyfile;
     s_keyfile.open(keyfile_name, ios::out|ios::binary);
     if (!s_keyfile.is_open())
@@ -251,9 +259,9 @@ void zip_huffman::writekeyfile(string huffman_map[], int chunk, string inputfile
             s_keyfile << i << " " << huffman_map[i] << endl;
         }
     }
-    cout << "writekeyfile" << endl;
+    //cout << "writekeyfile" << endl;
 }
-
+//写入文件，调用前两个函数
 void zip_huffman::writefile(string huffman_map[], string &str_zip, string inputfile_name)
 {
     //补充0到能被八个比特整除
@@ -265,7 +273,7 @@ void zip_huffman::writefile(string huffman_map[], string &str_zip, string inputf
     writezipfile(str_zip, inputfile_name);
     writekeyfile(huffman_map, chunk, inputfile_name);
 }
-
+//删除huffman树，防止内存泄漏
 void zip_huffman::release_huffman_tree(zip_huffman_node *root)
 {
     if (root == nullptr)
@@ -275,7 +283,7 @@ void zip_huffman::release_huffman_tree(zip_huffman_node *root)
     release_huffman_tree(root->left_child);
     delete now;
 }
-
+//执行压缩过程
 void zip_huffman::run()
 {
     openfile(inputfile_name, str_input);
@@ -287,12 +295,21 @@ void zip_huffman::run()
     genzipstr(huffman_map, str_input, str_zip);
     writefile(huffman_map, str_zip, inputfile_name);
     release_huffman_tree(root);
+    cout<<"                 ZIP OK! "<<endl;
+    cout<<"   generate file: \""<<outputfile_name<<"\""<<endl;
+    cout<<"  zipfile length: "<<str_zip.size()/8<<" bytes"<<endl;
+    cout<<"unzipfile length: "<<str_input.size()<<" bytes"<<endl;
 }
 int main()
 {
     zip_huffman test1;
-    test1.setinputfile_name("sunzip.bmp");
-    test1.setoutputfile_name("zip");
+    string input,output;
+    cout<<"input the filename to be zip :";
+    cin>>input;
+    cout<<"input the output filename: ";
+    cin>>output;
+    test1.setinputfile_name(input);
+    test1.setoutputfile_name(output);
     test1.run();
     return 0;
 }

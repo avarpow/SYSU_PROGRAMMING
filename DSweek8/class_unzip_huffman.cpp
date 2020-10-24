@@ -33,7 +33,7 @@ public:
     void setzipfile_name(string);//设置压缩文件文件名
     void setunzipfile_name(string);//设置解压得到文件名
     void setkeyfile_name(string);//设置解压得到文件名
-    void run();//
+    void run();//执行解压缩命令
 
 private:
     int chunk;//标记压缩后补了多少个零
@@ -44,14 +44,14 @@ private:
     string zip_str;//压缩的字符串
     string unzip_str;//解压后字符串
     unzip_huffman_node *root;//huffman树的根节点
-    void constructHuffmanMap(string &keyfile_name, string huffman_map[], int &chunk);//
-    void readZipstr(string &zipfile_name, string &zip_str, int chunk);//
-    void readZipfile(string &zipfile_name, string &keyfile_name, string &zip_str);//
-    void recreateHuffmanTree(string huffman_map[], unzip_huffman_node *root);//
+    void constructHuffmanMap(string &keyfile_name, string huffman_map[], int &chunk);//构建huffman树
+    void readZipstr(string &zipfile_name, string &zip_str, int chunk);//将字符串的字节转换为01字符串
+    void readZipfile(string &zipfile_name, string &keyfile_name, string &zip_str);//读取文件到字符串
+    void recreateHuffmanTree(string huffman_map[], unzip_huffman_node *root);//构建huffman树
     void unzipFile(string &zip_str, string huffman_map[], string &unzip_str, unzip_huffman_node *root);//
-    void printTree(unzip_huffman_node *root);//
-    void writeUnzipFile(string &unzip_str, string &unzipfile_name);//
-    void releaseHuffmanTree(unzip_huffman_node *root);//
+    void printTree(unzip_huffman_node *root);//打印huffman树 debug用
+    void writeUnzipFile(string &unzip_str, string &unzipfile_name);//将解压得到的字符串传入文件中
+    void releaseHuffmanTree(unzip_huffman_node *root);//删除huffman树
     void fail();//解压失败的结束函数
 };
 void unzip_huffman::fail(){
@@ -181,7 +181,7 @@ void unzip_huffman::recreateHuffmanTree(string huffman_map[], unzip_huffman_node
         }
     }
 }
-
+//根据huffman树和压缩字符串，将解压缩后的字符串写入unzip_str中
 void unzip_huffman::unzipFile(string &zip_str, string huffman_map[], string &unzip_str, unzip_huffman_node *root)
 {
     unzip_huffman_node *now = root;
@@ -280,9 +280,16 @@ void unzip_huffman::run()
 int main()
 {
     unzip_huffman test1;
-    test1.setzipfile_name("zip");//设置需要解压的文件名
-    test1.setkeyfile_name("zip.key");//设置需要解压的文件对应的解压信息key文件
-    test1.setunzipfile_name("myunzip.bmp");//设置解压后生成文件的文件名
+    string zip_file_name,zip_key_name,result_name;
+    cout<<"input the zipfile name: ";
+    cin>>zip_file_name;
+    cout<<"input the key file name: ";
+    cin>>zip_key_name;
+    cout<<"input the output file name: ";
+    cin>>result_name;
+    test1.setzipfile_name(zip_file_name);//设置需要解压的文件名
+    test1.setkeyfile_name(zip_key_name);//设置需要解压的文件对应的解压信息key文件
+    test1.setunzipfile_name(result_name);//设置解压后生成文件的文件名
     test1.run();
     return 0;
 }

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
 using namespace std;
 typedef struct
 {
@@ -70,6 +71,7 @@ int main()
     {
         ALGraph g = mkGraph();
         vector<int> v = degreeSequence(g);
+        sort(v.begin(),v.end(),greater<int>());
         printVector(v);
     }
     return 0;

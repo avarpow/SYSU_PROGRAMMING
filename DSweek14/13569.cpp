@@ -10,7 +10,7 @@ void dfs(int k,vector<int> &vis,vector<vector<int>> &g){
         }
     }
 }
-void findart(int v,int &count,int &ret,vector<int> &vis,vector<int> &num,vector<int> &low,vector<int> &parent,vector<vector<int>> &g){
+void findart(int v,int &count,int &ret,vector<int> &vis,vector<int> &num,vector<int> &low,vector<int> &parent,vector<int> &atvis,vector<vector<int>> &g){
     vis[v]=1;
     low[v]=num[v]=count++;
     for(int i=0;i<g[v].size();i++){
@@ -18,10 +18,11 @@ void findart(int v,int &count,int &ret,vector<int> &vis,vector<int> &num,vector<
         if(vis[now]==0){
             vis[now]=1;
             parent[now]=v;
-            findart(now,count,ret,vis,num,low,parent,g);
-            if(low[now]>=num[v] && v!=1){
+            findart(now,count,ret,vis,num,low,parent,atvis,g);
+            if(low[now]>=num[v] && v!=1 && atvis[v]==0){
+                atvis[v]++;
                 ret++;
-                //cout<<"find AT point "<<v<<endl;
+                cout<<"find AT point "<<v<<endl;
             }
             low[v]=min(low[v],low[now]);
         }
@@ -50,30 +51,31 @@ int findat(int n,vector<vector<int>> &g){
     for(int i=0;i<=n;i++){
         vis[i]=0;
     }
-    vector<int> num,low,parent;
+    vector<int> num,low,parent,atvis;
     num.resize(n+1,0);
     low.resize(n+1,0);
+    atvis.resize(n+1,0);
     parent.resize(n+1,0);
     int count=1;
-    findart(1,count,ret,vis,num,low,parent,g);
+    findart(1,count,ret,vis,num,low,parent,atvis,g);
     
-    // cout<<"num"<<endl;
-    // for(int i=1;i<=n;i++){
-    //     cout<<num[i]<<" ";
-    // }
-    // cout<<endl;
+    cout<<"num"<<endl;
+    for(int i=1;i<=n;i++){
+        cout<<num[i]<<" ";
+    }
+    cout<<endl;
 
-    // cout<<"low"<<endl;
-    // for(int i=1;i<=n;i++){
-    //     cout<<low[i]<<" ";
-    // }
-    // cout<<endl;
+    cout<<"low"<<endl;
+    for(int i=1;i<=n;i++){
+        cout<<low[i]<<" ";
+    }
+    cout<<endl;
     
-    // cout<<"parent"<<endl;
-    // for(int i=1;i<=n;i++){
-    //     cout<<parent[i]<<" ";
-    // }
-    // cout<<endl;
+    cout<<"parent"<<endl;
+    for(int i=1;i<=n;i++){
+        cout<<parent[i]<<" ";
+    }
+    cout<<endl;
     return ret;
 }
 void solve(){

@@ -22,7 +22,7 @@ void findart(int v,int &count,int &ret,vector<int> &vis,vector<int> &num,vector<
             if(low[now]>=num[v] && v!=1 && atvis[v]==0){
                 atvis[v]++;
                 ret++;
-                cout<<"find AT point "<<v<<endl;
+                //cout<<"find AT point "<<v<<endl;
             }
             low[v]=min(low[v],low[now]);
         }
@@ -59,23 +59,23 @@ int findat(int n,vector<vector<int>> &g){
     int count=1;
     findart(1,count,ret,vis,num,low,parent,atvis,g);
     
-    cout<<"num"<<endl;
-    for(int i=1;i<=n;i++){
-        cout<<num[i]<<" ";
-    }
-    cout<<endl;
+    // cout<<"num"<<endl;
+    // for(int i=1;i<=n;i++){
+    //     cout<<num[i]<<" ";
+    // }
+    // cout<<endl;
 
-    cout<<"low"<<endl;
-    for(int i=1;i<=n;i++){
-        cout<<low[i]<<" ";
-    }
-    cout<<endl;
+    // cout<<"low"<<endl;
+    // for(int i=1;i<=n;i++){
+    //     cout<<low[i]<<" ";
+    // }
+    // cout<<endl;
     
-    cout<<"parent"<<endl;
-    for(int i=1;i<=n;i++){
-        cout<<parent[i]<<" ";
-    }
-    cout<<endl;
+    // cout<<"parent"<<endl;
+    // for(int i=1;i<=n;i++){
+    //     cout<<parent[i]<<" ";
+    // }
+    // cout<<endl;
     return ret;
 }
 void solve(){
@@ -100,3 +100,6 @@ int main(){
     }
     return 0;
 }
+/*
+原未通过，是查找at时没有判重
+*/

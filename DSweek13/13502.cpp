@@ -49,7 +49,7 @@ vector<int> dijkstra(Graph g, Vertex source)
             }
         }
         ok[now_vertex]=1;
-        cout<<"solve now_vertex: "<<now_vertex<<endl;
+        //cout<<"solve now_vertex: "<<now_vertex<<endl;
         for(int j=1;j<=g.vertexCount;j++){
             if(ret[now_vertex]+g.weight[now_vertex][j]<ret[j]){
                 ret[j]=ret[now_vertex]+g.weight[now_vertex][j];

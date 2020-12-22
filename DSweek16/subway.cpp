@@ -41,9 +41,31 @@ public:
     void add_normal_station();
     vector<station> get_shortest_path(string station_a, string station_b);
     string creat_result_path(vector<station> path);
+    string get_line_message(int line_num);
     int getIndexByString(string station_string);
 };
 
+string subway_query::get_line_message(int line_num)
+{
+    string ret;
+    line t_line = lines[line_num];
+    ret += t_line.name;
+    ret += "\n";
+    int c = 1;
+    for (int i = t_line.start_station_num; i <= t_line.end_station_num; i++)
+    {
+        station t_sta = stations[i];
+        ret += "»´æ÷±‡∫≈£∫ ";
+        ret += to_string(i);
+        ret += "  œﬂ¬∑±‡∫≈£∫ ";
+        ret += to_string(c);
+        ret += ": ";
+        ret += t_sta.name;
+        ret += "\n";
+        c++;
+    }
+    return ret;
+}
 int subway_query::getIndexByString(string station_string)
 {
     for (int i = 1; i <= stations_num; i++)
@@ -64,55 +86,63 @@ vector<station> subway_query::get_shortest_path(string station_a, string station
     vector<int> pre;
     int start = getIndexByString(station_a);
     int end = getIndexByString(station_b);
-    cerr<<"start "<<start<<" end "<<end<<endl;
-    vis.resize(stations_num + 1,0);
-    pre.resize(stations_num + 1,0);
+    cerr << "start " << start << " end " << end << endl;
+    vis.resize(stations_num + 1, 0);
+    pre.resize(stations_num + 1, 0);
     dis.resize(stations_num + 1, 0x3f3f3f3f);
-    vis[start]=0;
-    dis[start]=0;
-    pre[start]=-1;
+    vis[start] = 0;
+    dis[start] = 0;
+    pre[start] = -1;
     //int last_station=0;
-    for(int i=0;i<stations_num;i++){
-        //ÈÄâÂèñÊúÄËøëÁöÑÁÇπ
-        int now_station=0;
-        int now_mindis=0x3f3f3f3f;
-        for(int j=1;j<=stations_num;j++){
-            if(vis[j]==0 && dis[j]<now_mindis){
-                now_station=j;
-                now_mindis=dis[j];
+    for (int i = 0; i < stations_num; i++)
+    {
+        //—°»°◊ÓΩ¸µƒµ„
+        int now_station = 0;
+        int now_mindis = 0x3f3f3f3f;
+        for (int j = 1; j <= stations_num; j++)
+        {
+            if (vis[j] == 0 && dis[j] < now_mindis)
+            {
+                now_station = j;
+                now_mindis = dis[j];
             }
         }
-        if(now_station == 0){
-            cerr<<"now_station == 0 exit"<<endl;
-            break;//ÂÆåÊàê
+        if (now_station == 0)
+        {
+            cerr << "now_station == 0 exit" << endl;
+            break; //ÕÍ≥…
         }
-        //Â∑≤ÁªèÁ°ÆËÆ§ ‰ºòÂåñ
-        vis[now_station]=1;
-        cerr<<"solve now_station = "<<now_station<<endl;
-        for(int j=0;j<g[now_station].size();j++){
-            edge temp=g[now_station][j];
-            if(dis[now_station]+temp.weight<dis[temp.to]){
-                cerr<<"optimize  from"<<temp.from<<" to "<<temp.to<<" dis "<<dis[now_station]+temp.weight<<endl;
-                pre[temp.to]=now_station;
-                dis[temp.to]=dis[now_station]+temp.weight;
+        //“—æ≠»∑»œ ”≈ªØ
+        vis[now_station] = 1;
+        cerr << "solve now_station = " << now_station << endl;
+        for (int j = 0; j < g[now_station].size(); j++)
+        {
+            edge temp = g[now_station][j];
+            if (dis[now_station] + temp.weight < dis[temp.to])
+            {
+                cerr << "optimize  from" << temp.from << " to " << temp.to << " dis " << dis[now_station] + temp.weight << endl;
+                pre[temp.to] = now_station;
+                dis[temp.to] = dis[now_station] + temp.weight;
             }
         }
-
     }
-    int now_sta=end;
+    int now_sta = end;
     vector<station> ret;
-    while(now_sta!= start){
+    while (now_sta != start)
+    {
         ret.push_back(stations[now_sta]);
-        now_sta=pre[now_sta];
+        now_sta = pre[now_sta];
     }
-    // ÂèçÂêë
-    for(int i=0,j=ret.size()-1;i<j;i++,j--){
-        swap(ret[i],ret[j]);
+    // ∑¥œÚ
+    for (int i = 0, j = ret.size() - 1; i < j; i++, j--)
+    {
+        swap(ret[i], ret[j]);
     }
-    for(auto &i:ret){
-        cerr <<i.name<<" ";
+    for (auto &i : ret)
+    {
+        cerr << i.name << " ";
     }
-    cerr<<endl;
+    cerr << endl;
     return ret;
 }
 string creat_result_path(vector<station> path)
@@ -211,20 +241,160 @@ void subway_query::init_subway()
     add_cross_station();
     add_normal_station();
 }
-class gui{
-    public:
-        void showMenu();
-        void clearMenu();
+class GUI
+{
+    subway_query t;
 
-
+public:
+    void GUIinit();
+    void GUImain();
+    void showMainMenu();
+    void show_line_queryMenu();
+    void show_station_queryMenu();
+    void clearMenu();
+    void subway_line_query();
+    void print_line_query_message(int line_num);
+    void subway_station_query();
+    void delay();
 };
-void gui::showMenu(){
+void GUI::delay()
+{
+    system("pause");
+}
+void GUI::print_line_query_message(int line_num)
+{
+    string ret = t.get_line_message(line_num);
+    cout << ret;
+    delay();
+}
+void GUI::subway_station_query()
+{
+    int opcode = 0;
+    while (opcode != -1)
+    {
+        show_station_queryMenu();
+        int t;
+        cin >> t;
+        if (t == 1)
+        {
 
+        }
+        if (t == 2)
+        {
+
+        }
+        if (t == 3)
+        {
+
+        }
+        if (t == 4)
+        {
+            opcode = -1;
+        }
+        else
+        {
+            opcode = 0;
+        }
+    }
+}
+void GUI::subway_line_query()
+{
+    int opcode = 0;
+    while (opcode != -1)
+    {
+        show_line_queryMenu();
+        int t;
+        cin >> t;
+        if (t == 17)
+        {
+            opcode = -1;
+        }
+        else
+        {
+            print_line_query_message(t);
+        }
+    }
+}
+void GUI::show_station_queryMenu()
+{
+    cout << "---------------------------π„÷›µÿÃ˙’æµ„-’æµ„≤È—Ø------------------------\n"
+            "                          1.ƒ£∫˝≤È—Ø                       \n"
+            "                          2.œﬂ¬∑±‡∫≈≤È—Ø                       \n"
+            "                          3.æ´»∑’æµ„√˚≥∆≤È—Ø                       \n"
+            "                          4.ÕÀ≥ˆ                       \n"
+            "--------------------------------------------------------------\n";
+}
+void GUI::show_line_queryMenu()
+{
+    clearMenu();
+    cout << "---------------------------π„÷›µÿÃ˙œﬂ¬∑≤È—Ø------------------------\n"
+            "                          1.1∫≈œﬂ                       \n"
+            "                          2.2∫≈œﬂ                       \n"
+            "                          3.3∫≈œﬂ                       \n"
+            "                          4.3∫≈œﬂ∂˛∆⁄                       \n"
+            "                          5.4∫≈œﬂ                       \n"
+            "                          6.5∫≈œﬂ                       \n"
+            "                          7.6∫≈œﬂ                       \n"
+            "                          8.7∫≈œﬂ                       \n"
+            "                          9.8∫≈œﬂ                       \n"
+            "                          10.9∫≈œﬂ                       \n"
+            "                          11.13∫≈œﬂ                       \n"
+            "                          12.14∫≈œﬂ                       \n"
+            "                          13.14∫≈œﬂ∂˛∆⁄                       \n"
+            "                          14.21∫≈œﬂ                       \n"
+            "                          15.APMœﬂ                       \n"
+            "                          16.π„∑œﬂ                       \n"
+            "                          17.ÕÀ≥ˆ                       \n"
+            "--------------------------------------------------------------\n";
+}
+void GUI::GUImain()
+{
+    int opcode = 0;
+    while (opcode != -1)
+    {
+        showMainMenu();
+        int t;
+        cin >> t;
+        if (t == 1)
+        {
+            subway_line_query();
+        }
+        if (t == 2)
+        {
+            subway_station_query();
+        }
+        if (t == 3)
+        {
+            opcode = -1;
+        }
+        else
+        {
+            opcode = 0;
+        }
+    }
+}
+void GUI::GUIinit()
+{
+    t.init_subway();
+}
+void GUI::clearMenu()
+{
+    //system("cls");
+}
+void GUI::showMainMenu()
+{
+    clearMenu();
+    cout << "---------------------------π„÷›µÿÃ˙≤È—Ø------------------------\n"
+            "                          1.µÿÃ˙œﬂ¬∑≤È—Ø                       \n"
+            "                          2.’æµ„-’æµ„≤È—Ø                      \n"
+            "                          3.ÕÀ≥ˆ                              \n"
+            "--------------------------------------------------------------\n";
 }
 int main()
 {
-    subway_query t;
-    t.init_subway();
+    GUI g;
+    g.GUIinit();
+    g.GUImain();
 
     // string a,b;
     // cin>>a;

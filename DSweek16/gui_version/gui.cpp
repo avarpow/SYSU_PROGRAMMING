@@ -6,53 +6,10 @@
 #include <list>
 #include <queue>
 #include <Windows.h>
+#include <graphics.h>		// Reference graphics library header file
+#include <conio.h>
+#include "gui.h"
 using namespace std;
-struct station
-{
-    int num;
-    int line;
-    string name;
-    string pinyin;
-    string line_name;
-};
-struct line
-{
-    int num;
-    string name;
-    int start_station_num;
-    int end_station_num;
-};
-struct edge
-{
-    int from;
-    int to;
-    int weight;
-};
-class subway_query
-{
-    vector<vector<edge>> g;
-    int stations_num;
-    int lines_num;
-    vector<station> stations;
-    vector<line> lines;
-
-public:
-    void init_subway();
-    void clear_edge();
-    void add_cross_station();
-    void add_normal_station();
-    void add_huancheng_cross_station();
-    void add_huancheng_normal_station();
-    vector<station> get_shortest_path(string station_a, string station_b);
-    vector<station> get_shortest_path(int station_a, int station_b);
-    vector<station> get_huancheng_shortest_path(string station_a, string station_b);
-    vector<station> get_huancheng_shortest_path(int station_a, int station_b);
-    string creat_result_path(vector<station> path);
-    string get_line_message(int line_num);
-    int getIndexByString(string station_string);
-    vector<station> sta_mohu_query(string py);
-};
-
 vector<station> subway_query::sta_mohu_query(string py)
 {
     vector<station> ret;
@@ -78,20 +35,20 @@ vector<station> subway_query::sta_mohu_query(string py)
 string subway_query::get_line_message(int line_num)
 {
     string ret;
-    line t_line = lines[line_num];
+    subway_line t_line = lines[line_num];
     ret += t_line.name;
     ret += "\n";
     int c = 1;
     for (int i = t_line.start_station_num; i <= t_line.end_station_num; i++)
     {
         station t_sta = stations[i];
-        ret += "全局编号： ";
+        ret += "全局编号: ";
         ret += to_string(i);
-        ret += "  线路编号： ";
+        ret += "  线路编号: ";
         ret += to_string(c);
         ret += ": ";
         ret += t_sta.name;
-        ret += " pinyin : ";
+        ret += " 汉语拼音 : ";
         ret += t_sta.pinyin;
         ret += "\n";
         c++;
@@ -173,7 +130,7 @@ vector<station> subway_query::get_shortest_path(string station_a, string station
     for (int i = 0, j = ret.size() - 1; i < j; i++, j--)
     {
         swap(ret[i], ret[j]);
-    }    
+    }
     if(ret.size()>1 && ret[ret.size()-1].name == ret[ret.size()-2].name){
         ret.pop_back();
     }
@@ -568,27 +525,7 @@ void subway_query::init_subway()
         //cerr << i.num << " " << i.name << " " << i.start_station_num << " " << i.end_station_num << endl;
     }
 }
-class GUI
-{
-    subway_query t;
 
-public:
-    void GUIinit();
-    void GUImain();
-    void showMainMenu();
-    void show_line_queryMenu();
-    void show_station_queryMenu();
-    void clearMenu();
-    void subway_line_query();
-    void print_line_query_message(int line_num);
-    void subway_station_query();
-    void delay();
-    void wrong_message();
-    void mohu_query();
-    void code_query();
-    void name_query();
-    int mohu_select();
-};
 void GUI::wrong_message(){
     cout<<"wrong chose"<<endl;
 }
@@ -599,27 +536,35 @@ void GUI::delay()
 void GUI::print_line_query_message(int line_num)
 {
     string ret = t.get_line_message(line_num);
-    cout << ret;
+    gui_print_msg(ret);
     delay();
 }
 int GUI::mohu_select(){
     string temp;
-    cin>>temp;
+    temp = get_string_input("请输入站点的模糊拼音:");
     vector<station> result_list;
     result_list=t.sta_mohu_query(temp);
     int opcode=1;
+    string msg;
     while(opcode!=-1){
         //显示查询信息
         for(int i=0;i<result_list.size();i++){
-            cout<<i<<": ";
-            cout<<result_list[i].name;
-            cout<<" 所属线路："<<result_list[i].line_name;
-            cout<<endl;
+            msg+=to_string(i);
+            msg+=": ";
+            msg+=result_list[i].name;
+            msg+=" 所属线路:";
+            msg+=result_list[i].line_name;
+            msg+="\n";
+            // cout<<result_list[i].name;
+            // cout<<" 所属线路:"<<result_list[i].line_name;
+            // cout<<endl;
         }
 
-        cout<<"请选择站点编号";
+        gui_print_msg(msg);
+        // cout<<"请选择站点编号";
+        //msg+="请选择站点编号";
         int t;
-        cin>>t;
+        t = get_int_input("请选择站点编号:");
         if(t>=0 && t<result_list.size()){
             return result_list[t].num;
         }
@@ -632,51 +577,63 @@ int GUI::mohu_select(){
 }
 void GUI::mohu_query(){
     //show_mohu_queryMenu();
-    cout<<"起点模糊拼音查询： ";
+    cout<<"起点模糊拼音查询: ";
     int a=mohu_select();
-    clearMenu();
-    cout<<"终点模糊拼音查询： ";
+    cout<<"终点模糊拼音查询: ";
     int b=mohu_select();
     vector<station> path=t.get_shortest_path(a,b);
     vector<station> path2=t.get_huancheng_shortest_path(a,b);
-    cout<<"站点数最少的路线："<<endl;
+    string all_msg;
+    all_msg+="站点数最少的路线: \n";
     string msg=t.creat_result_path(path);
-    cout<<msg;
-    cout<<"\n\n换乘次数最少的路线："<<endl;
+    // cout<<msg;
+    all_msg+=msg;
+    all_msg+="\n\n";
+    all_msg+="换乘次数最少的路线:\n";
     string msg2=t.creat_result_path(path2);
-    cout<<msg2;
+    all_msg+=msg2;
+    gui_print_msg(all_msg);
+    // cout<<msg2;
 }
 void GUI::code_query(){
     //show_code_queryMenu();
     int a,b;
-    cout<<"起点全局编号： ";
-    cin>>a;
-    cout<<"终点全局编号： ";
-    cin>>b;
+    string all_msg;
+    // cout<<"起点全局编号: ";
+    // cin>>a;
+    a = get_int_input("请输入起点地铁站编号:");
+    // cout<<"终点全局编号: ";
+    // cin>>b;
+    b = get_int_input("请输入终点地铁站编号:");
     vector<station> path=t.get_shortest_path(a,b);
     vector<station> path2=t.get_huancheng_shortest_path(a,b);
-    cout<<"站点数最少的路线："<<endl;
+    all_msg+="站点数最少的路线:\n";
     string msg=t.creat_result_path(path);
-    cout<<msg;
-    cout<<"\n\n换乘次数最少的路线："<<endl;
+    all_msg+=msg;
+    all_msg+="\n\n换乘次数最少的路线:\n";
     string msg2=t.creat_result_path(path2);
-    cout<<msg2;
+    all_msg+=msg2;
+    gui_print_msg(all_msg);
 }
 void GUI::name_query(){
     //show_name_queryMenu();
     string a,b;
-    cout<<"起点完整名称： ";
-    cin>>a;
-    cout<<"终点完整名称： ";
-    cin>>b;
+    // cout<<"起点完整名称: ";
+    a = get_string_input("起点完整名称: ");
+    // cout<<"终点完整名称: ";
+    b = get_string_input("终点完整名称: ");
+    // cin>>b;
+    string all_msg;
     vector<station> path=t.get_shortest_path(a,b);
     vector<station> path2=t.get_huancheng_shortest_path(a,b);
-    cout<<"站点数最少的路线："<<endl;
+    all_msg+="站点数最少的路线:\n";
     string msg=t.creat_result_path(path);
-    cout<<msg;
-    cout<<"换乘次数最少的路线："<<endl;
+    all_msg+=msg;
+    all_msg+="\n\n";
+    all_msg+="换乘次数最少的路线:\n";
     string msg2=t.creat_result_path(path2);
-    cout<<msg2;
+    all_msg+=msg2;
+    gui_print_msg(all_msg);
 }
 void GUI::subway_station_query()
 {
@@ -685,7 +642,8 @@ void GUI::subway_station_query()
     {
         show_station_queryMenu();
         int t;
-        cin >> t;
+        // cin >> t;
+        t = get_int_input("请输入站点-站点查询方式");
         if (t == 1)
         {
             mohu_query();
@@ -718,7 +676,8 @@ void GUI::subway_line_query()
     {
         show_line_queryMenu();
         int t;
-        cin >> t;
+        // cin >> t;
+        t = get_int_input("请输入查询的地铁线路编号");
         if (t < 17)
         {
             print_line_query_message(t);
@@ -734,18 +693,20 @@ void GUI::subway_line_query()
 }
 void GUI::show_station_queryMenu()
 {
-    clearMenu();
-    cout << "---------------------------广州地铁站点-站点查询--------------------\n"
+    string msg=
+            "---------------------------广州地铁站点-站点查询--------------------\n"
             "                          1.模糊查询                       \n"
             "                          2.线路编号查询                       \n"
             "                          3.精确站点名称查询                       \n"
             "                          4.退出                       \n"
             "------------------------------------------------------------------\n";
+    gui_print_msg(msg);
 }
 void GUI::show_line_queryMenu()
 {
     clearMenu();
-    cout << "---------------------------广州地铁线路查询----------------------------\n"
+    string msg=
+            "---------------------------广州地铁线路查询----------------------------\n"
             "                          1.1号线                       \n"
             "                          2.2号线                       \n"
             "                          3.3号线                       \n"
@@ -764,6 +725,7 @@ void GUI::show_line_queryMenu()
             "                          16.广佛线                       \n"
             "                          17.返回                       \n"
             "------------------------------------------------------------------\n";
+    gui_print_msg(msg);
 }
 void GUI::GUImain()
 {
@@ -772,7 +734,8 @@ void GUI::GUImain()
     {
         showMainMenu();
         int t;
-        cin >> t;
+        // cin >> t;
+        t = get_int_input("请输入选择编号:");
         if (t == 1)
         {
             subway_line_query();
@@ -784,6 +747,8 @@ void GUI::GUImain()
         if (t == 3)
         {
             opcode = -1;
+            string msg="再见！欢迎下次使用";
+            gui_print_msg(msg);
         }
         else
         {
@@ -791,35 +756,60 @@ void GUI::GUImain()
         }
     }
 }
+void GUI::gui_print_msg(string msg){
+    clearMenu();
+    LPCTSTR tempmsg = msg.c_str();
+    RECT r = { 0, 0, 1050, 700 };
+	drawtext(tempmsg, &r, DT_CENTER );   
+}
+int GUI::get_int_input(string tips){
+    int t;
+    char s[10];
+    InputBox(s, 10, tips.c_str());
+    t = atoi(s);
+    return t;
+}
+string GUI::get_string_input(string tips){
+    string t;
+    char s[10];
+    InputBox(s, 10, tips.c_str());
+    for(int i=0;i<strlen(s);i++){
+        t.push_back(s[i]);
+    }
+    return t;
+}
 void GUI::GUIinit()
 {
     t.init_subway();
 }
+extern IMAGE cover;
 void GUI::clearMenu()
 {
-    system("cls");
+    //system("cls");
+    putimage(0, 0, &cover);
 }
 void GUI::showMainMenu()
 {
     clearMenu();
-    cout << "---------------------------广州地铁查询------------------------\n"
+    string msg =
+            "---------------------------广州地铁查询------------------------\n"
             "                          1.地铁线路查询                       \n"
             "                          2.站点-站点查询                      \n"
             "                          3.退出                              \n"
             "--------------------------------------------------------------\n";
-    
+    gui_print_msg(msg);
 }
-int main()
-{
-    GUI g;
-    g.GUIinit();
-    g.GUImain();
-    //体现最短路径和最少换乘的站：
-    // 天平架 车陂南
-    // string a,b;
-    // cin>>a;
-    // cout<<a;
-    // cin>>b;
-    // cout<<b;
-    // t.get_shortest_path(a,b);
-}
+//int main()
+//{
+//    GUI g;
+//    g.GUIinit();
+//    g.GUImain();
+//    //体现最短路径和最少换乘的站:
+//    // 天平架 车陂南
+//    // string a,b;
+//    // cin>>a;
+//    // cout<<a;
+//    // cin>>b;
+//    // cout<<b;
+//    // t.get_shortest_path(a,b);
+//}
